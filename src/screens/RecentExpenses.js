@@ -14,7 +14,7 @@ const RecentExpenses = () => {
 		return (expense.date >= date7Days) && (expense.date <= today);
 	})
 
-	return <ExpensesOutput expenses={recentExpense} expensesPeriod={'Last 7 Days'} />;
+	return <ExpensesOutput expenses={recentExpense} expensesPeriod={'Last 7 Days'} fallBackText="No Expense found in last 7 days!"/>;
 };
 
 const styles = StyleSheet.create({});

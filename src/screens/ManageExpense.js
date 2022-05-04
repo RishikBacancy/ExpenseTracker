@@ -1,6 +1,6 @@
 import React,{ useLayoutEffect, useContext } from "react";
 import { StyleSheet, Text, View} from "react-native";
-import Button from "../components/UI/Button";
+import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import IconButton from "../components/UI/IconButton";
 import { GlobalStyle } from "../constants/styles";
 import { ExpensesContext } from "../store/expenseContext";
@@ -28,11 +28,11 @@ const ManageExpense = ({ route, navigation}) => {
         navigation.goBack();
     };
 
-    const confirmHandelr = () => {
+    const confirmHandelr = (expenseData) => {
         if(editMode) {
-            expenseCtx.updateExpense(editingExpenseId,{description:"Update Test", amount: 99.99, date: new Date("2022-05-04")});
+            expenseCtx.updateExpense(editingExpenseId,expenseData);
         } else {
-            expenseCtx.addExpense({description:"Test", amount:99.99, date: new Date("2022-05-04")});
+            expenseCtx.addExpense(expenseData);
         }
         navigation.goBack();
     };
@@ -40,10 +40,7 @@ const ManageExpense = ({ route, navigation}) => {
     return(
         <View style={styles.container}>
 
-            <View style={styles.btnContainer}>
-                <Button style={styles.btn} mode="flat" onPress={cancelHandelr} >Cancel</Button>
-                <Button style={styles.btn} onPress={confirmHandelr} >{editMode?"Update":"Add"}</Button>
-            </View>
+            <ExpenseForm onSubmit={confirmHandelr} submitLabel={editMode?"Update":"Add"} onCancel={cancelHandelr}/>
 
             {editMode && 
                 <View style={styles.deleteContainer}>
@@ -63,15 +60,6 @@ const styles = StyleSheet.create({
         flex:1,
         padding:24,
         backgroundColor:GlobalStyle.colors.primary800,
-    },
-    btnContainer:{
-        flexDirection:"row",
-        justifyContent:"center",
-        alignItems:"center",
-    },
-    btn:{
-        minWidth:120,
-        marginHorizontal:8,
     },
     deleteContainer:{
         marginTop:16,

@@ -7,7 +7,7 @@ const AllExpenses = () => {
 
 	const expensesCtx = useContext(ExpensesContext);
 
-	return <ExpensesOutput expenses={expensesCtx.expenses} expensesPeriod={'Total'} />;
+	return <ExpensesOutput expenses={expensesCtx.expenses} expensesPeriod={'Total'} fallBackText="No Expense found!"/>;
 };
 
 const styles = StyleSheet.create({});
