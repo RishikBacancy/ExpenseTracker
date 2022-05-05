@@ -2,16 +2,17 @@ import axios from 'axios';
 
 const ROOT_URL = 'https://expense-tracker-f2dc3-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
-export const storeExpense = async(expenseData) => {
-	const response = await axios.post(ROOT_URL + 'expense.json', expenseData);
+export const storeExpense = async(expenseData, token) => {
+	const response = await axios.post(ROOT_URL + 'expense.json?auth=' + token, expenseData);
 
     const id = response.data.name;
 
     return  id;
 };
 
-export const fetchExpense = async () => {
-	const response = await axios.get(ROOT_URL + 'expense.json');
+export const fetchExpense = async (token) => {
+
+	const response = await axios.get(ROOT_URL + 'expense.json?auth=' + token);
 
 	const expense = [];
 
@@ -28,15 +29,15 @@ export const fetchExpense = async () => {
     return expense;
 };
 
-export const updateExpense = (id, expenseData) => {
+export const updateExpense = (id, expenseData,token) => {
     return axios.put(
-        ROOT_URL + `/expense/${id}.json`,
+        ROOT_URL + `/expense/${id}.json?auth=${token}`,
         expenseData
     );
 }
 
-export const deleteExpense = async(id) => {
+export const deleteExpense = async(id, token) => {
     return axios.delete(
-        ROOT_URL + `/expense/${id}.json`
+        ROOT_URL + `/expense/${id}.json?auth=${token}`
     );
 }

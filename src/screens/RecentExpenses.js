@@ -3,12 +3,17 @@ import { StyleSheet, Text, View } from 'react-native';
 import ExpensesOutput from '../components/ExpensesOutput/ExpensesOutput';
 import ErrorOverlay from '../components/UI/ErrorOverlay';
 import LoadingOverlay from '../components/UI/LodingOverlay';
+import { AuthContext } from '../store/authContext';
 import { ExpensesContext } from '../store/expenseContext';
 import { getDateMinusDays } from '../util/date';
 import { fetchExpense } from '../util/http';
 
 const RecentExpenses = () => {
 	const expenseCtx = useContext(ExpensesContext);
+
+	const authCtx = useContext(AuthContext);
+
+	const token = authCtx.token;
 
 	const [ isFetching, setIsFetching ] = useState(true);
 	const [ error, setError ] = useState();
@@ -17,7 +22,7 @@ const RecentExpenses = () => {
 		const getExpense = async () => {
 			setIsFetching(true);
 			try {
-				const expenses = await fetchExpense();
+				const expenses = await fetchExpense(token);
 				expenseCtx.setExpense(expenses);
 			} catch (error) {
 				setError('Could not fetch expense!');
@@ -26,7 +31,7 @@ const RecentExpenses = () => {
 		};
 
 		getExpense();
-	}, []);
+	}, [token]);
 
 	const errorHandler = () => {
 		setError(null);
