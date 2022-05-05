@@ -8,9 +8,26 @@ import AllExpenses from '../screens/AllExpenses';
 import { GlobalStyle } from '../constants/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconButton from '../components/UI/IconButton';
+import LoginScreen from '../screens/LoginScreen';
+import SignupScreen from '../screens/SignupScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const AuthStack = () => {
+	return (
+		<Stack.Navigator
+			screenOptions={{
+				headerStyle: { backgroundColor: GlobalStyle.colors.primary500 },
+				headerTintColor: 'white',
+				contentStyle: { backgroundColor: GlobalStyle.colors.primary100 }
+			}}
+		>
+			<Stack.Screen name="Login" component={LoginScreen} />
+			<Stack.Screen name="Signup" component={SignupScreen} />
+		</Stack.Navigator>
+	);
+};
 
 const TabNavigation = () => {
 	return (
@@ -58,22 +75,28 @@ const TabNavigation = () => {
 	);
 };
 
+const AuthenticatedStack = () => {
+	<Stack.Navigator
+		screenOptions={{
+			headerStyle: { backgroundColor: GlobalStyle.colors.primary500 },
+			headerTintColor: 'white'
+		}}
+	>
+		<Stack.Screen name="OverView" component={TabNavigation} options={{ headerShown: false }} />
+		<Stack.Screen
+			name="Manage"
+			component={ManageExpense}
+			options={{
+				presentation: 'modal'
+			}}
+		/>
+	</Stack.Navigator>;
+};
+
 const Navigation = () => {
-	return (
-		<NavigationContainer>
-			<Stack.Navigator
-				screenOptions={{
-					headerStyle: { backgroundColor: GlobalStyle.colors.primary500},
-					headerTintColor:"white",
-				}}
-			>
-				<Stack.Screen name="OverView" component={TabNavigation} options={{ headerShown: false }} />
-				<Stack.Screen name="Manage" component={ManageExpense} options={{
-					presentation:"modal"
-				}} />
-			</Stack.Navigator>
-		</NavigationContainer>
-	);
+	return <NavigationContainer>
+		<AuthStack/>
+	</NavigationContainer>;
 };
 
 export default Navigation;
