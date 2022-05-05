@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -10,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconButton from '../components/UI/IconButton';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
+import { AuthContext } from '../store/authContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,6 +32,8 @@ const AuthStack = () => {
 };
 
 const TabNavigation = () => {
+	const authCtx = useContext(AuthContext);
+
 	return (
 		<Tab.Navigator
 			screenOptions={({ navigation }) => ({
@@ -42,14 +46,17 @@ const TabNavigation = () => {
 				},
 				tabBarActiveTintColor: GlobalStyle.colors.accent500,
 				headerRight: ({ tintColor }) => (
-					<IconButton
-						icon="add"
-						size={24}
-						color={tintColor}
-						onPress={() => {
-							navigation.navigate('Manage');
-						}}
-					/>
+					<View style={styles.btnRow}>
+						<IconButton
+							icon="add"
+							size={24}
+							color={tintColor}
+							onPress={() => {
+								navigation.navigate('Manage');
+							}}
+						/>
+						<IconButton icon="exit" size={24} color={tintColor} onPress={authCtx.logout} />
+					</View>
 				)
 			})}
 		>
@@ -76,27 +83,37 @@ const TabNavigation = () => {
 };
 
 const AuthenticatedStack = () => {
-	<Stack.Navigator
-		screenOptions={{
-			headerStyle: { backgroundColor: GlobalStyle.colors.primary500 },
-			headerTintColor: 'white'
-		}}
-	>
-		<Stack.Screen name="OverView" component={TabNavigation} options={{ headerShown: false }} />
-		<Stack.Screen
-			name="Manage"
-			component={ManageExpense}
-			options={{
-				presentation: 'modal'
+	return (
+		<Stack.Navigator
+			screenOptions={{
+				headerStyle: { backgroundColor: GlobalStyle.colors.primary500 },
+				headerTintColor: 'white'
 			}}
-		/>
-	</Stack.Navigator>;
+		>
+			<Stack.Screen name="OverView" component={TabNavigation} options={{ headerShown: false }} />
+			<Stack.Screen
+				name="Manage"
+				component={ManageExpense}
+				options={{
+					presentation: 'modal'
+				}}
+			/>
+		</Stack.Navigator>
+	);
 };
 
 const Navigation = () => {
-	return <NavigationContainer>
-		<AuthStack/>
-	</NavigationContainer>;
+	const authCtx = useContext(AuthContext);
+
+	return (
+		<NavigationContainer>{authCtx.isAuthenticated ? <AuthenticatedStack /> : <AuthStack />}</NavigationContainer>
+	);
 };
+
+const styles = StyleSheet.create({
+	btnRow: {
+		flexDirection: 'row'
+	}
+});
 
 export default Navigation;
