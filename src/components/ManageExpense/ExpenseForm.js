@@ -15,7 +15,7 @@ const ExpenseForm = ({ onCancel, onSubmit, submitLabel, defaultValue }) => {
 		setInputs((currentInputs) => {
 			return {
 				...currentInputs,
-				[inputIdentifier]: { value: enteredValue }
+				[inputIdentifier]: { value: enteredValue, isValid: true }
 			};
 		});
 	};
